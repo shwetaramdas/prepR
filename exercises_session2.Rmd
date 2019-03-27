@@ -1,0 +1,117 @@
+---
+title: "R Exercises"
+author: "Shweta Ramdas"
+date: "April 2, 2019"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+###Exercise 1.3.1: Installing packages
+
+* Install ggplot2 using install.packages()
+* Install affy using biocLite()
+
+```{r}
+#Type command here
+
+```
+
+###Exercise 1.3.2: Loading an .Rdata file
+
+The data set that we'll use for the exercise is located online at 
+http://ua.edu.au/ccs/docs/lsr/driving.Rdata
+
+Open a browser, go to that address and save the file to disk. In my case, I saved it to
+
+~/pipelines/workshop/driving.Rdata
+
+where ~ is a standard symbol used in Unix-like operating systems such as Mac OS X that refers to "the current user's home directory", which for my current machine would be /Users/mattpaul. I mention this because you'll sometimes see R refer to the ~ directory, and you might want to know what it means.
+
+In any case, once you've saved the file to disk somewhere, use the load button in the Rstudio workspace tab to open it. You'll see that there's only one variable there, a data frame called driving.
+
+###Exercise 1.3.3: Saving the current workspace to a file
+Create a few new variables, and then use the save button in the Rstudio workspace tab to save it to disk. Don't overwrite the existing driving.Rdata file: call it something like driving_version2.Rdata or something. I generally find that it's a good idea to leave the original data file in pristine condition.
+
+##Exercises for 2.1: Descriptive statistics
+
+In this session, we will learn some basic statistical tests and learn to apply them on an example gene expression dataset comparing gene expression between _Parkinson's_ disease patients .
+
+###Preliminaries
+
+* Download the expression data (expressionpd.txt) from www.github.com/shwetaramdas/prepR
+* Load the expressionpd.txt file into a file expn. What do the arguments mean?
+* Type head (expn) to look at the first few observations
+* How many samples does this data contain? How many genes?
+* Is your favorite gene in the table? (how would you look for this?)
+
+```{r error=TRUE}
+expn = read.table(file="expressionpd.txt", header=T, sep="\t", stringsAsFactors=F)
+#what do the arguments mean? header, sep, stringsAsFactors?
+dim(expn)
+
+#There are too many genes to be seen. How about viewing only  the first 5 columns and the first 5 rows?
+expn[1:5,1:5]
+
+#Pick out expression pattern in your favorite gene. Some examples: LRRK2, PARK7, PINK1, CANT1 
+```
+
+Note: The filepath in the load function needs to match where you download expression.csv
+
+###Exercise 2.1.1: Central tendency
+
+* Compute the mean expression of gene **EPS8**
+* Compute the median expression of gene **EPS8**
+* Compute the mean expression of gene **EPS8** with trim of 10%
+
+```{r}
+#before estimating the means/medians of this gene, you could plot the expression of this gene across the 10 samples.
+
+```
+###Exercise 2.1.2: Spread
+
+* Compute the standard deviation of the expression of gene **LRRK2**
+* Compute the expression range of gene **LRRK2**
+* Compute the interquartile range on the expression of gene **LRRK2**
+* Compute the 10th, 25th, 75th and 90th percentiles for expression for the first sample
+
+###Exercise 2.1.3: Tabulation
+
+* Use table() to construct a tabulation of the **samples** variable
+* Use table() to cross-tabulate the samples and the sex variable
+
+###Exercise 2.1.4: Correlations
+
+* Calculate the correlation between the expressions of genes **PARK1** and **PARK2**
+* Calculate the Spearman correlation for the same variables, again using cor()
+* Use correlate() to compute all pairwise correlations.
+
+###Exercise 2.1.5: For loops and conditional statements
+
+* Setup a for loop that iterates through the first 10 columns of **expn** and prints the mean for column
+* Setup a for loop that iterates through the rows of **expn** and prints the mean for row
+* Setup a for loop that iterates through all the columns of **expn** and prints the mean for column only if the mean is greater than 1
+* Setup a for loop that iterates through the rows of **expn** and prints the row number if the standard deviation is greater than 100, **else** print "Small data here"
+
+##Exercises for 2.2: Simple inferential statistics
+
+###Exercise 2.2.1: Comparing means of groups
+
+* Run a **t.test()** comparing the difference in gene expression between the diseased and the non-diseased dataset for genes **LRRK2** and **CANT1**
+* See how changing the **alternative** parameter affects the output
+* Store the p-value from the first test using **$p.value**
+* Run a paired samples t-test to see if the number of errors made at time 2 differs from the number of errors people made at time 1
+* Run **wilcox.test()** for both unpaired **(paired=F)** and paired **(paired=T)** tests to see if the difference in means is significant. Describe the output for both tests.
+* Make a hypothesis about the difference in age of drivers that are distracted by **toddlers** compared to age of drivers distracted by the **radio**. Test that hypothesis using t.test() and wilcox.test()
+
+###Exercise 2.2.1: Tests for enrichment
+
+* For **experiment A**, you plate **10 plates of bacteria** that have been exposed to ionizing radiation and **another 10 plates of bacteria** that have not been exposed as a control. After two weeks, you find that only 7 of the exposed plates grew colonies, whereas all of the un-exposed plates grew colonies. Using Fisher's exact test, **fisher.test()**, determine if the number of "dead" plates is significantly different between the experimental and control groups. What is the p-value? Is the difference significant?
+* For **experiment B**, you decide that you really need more data points to make any conclusions about **experiment A**. You decide to plate **50 plates of bacteria** that have been exposed to ionizing radiation and **50 plates of bacteria** that have not been exposed as a control. After two weeks, you find that only **35 of the exposed plates grew colonies**, whereas all but two of the un-exposed plates grew colonies. Using Fisher's exact test, **fisher.test()**, determine if the number of "dead" plates is significantly different between the experimental and control groups. What is the p-value? Is the difference significant? 
+* Feeling pretty confident that exposure to ionizing radiation is having a significant effect on the survival of your bacteria, you wonder if those surviving bacteria plates have evolved or reacted to the exposure by changing the active proteome in their cells. You run mass spectrometry (MS) on protein lysates from 5 plates that survived radiation and 5 plates from your control group. Of the **8,000 proteins** that were detectable, you find **600 proteins that are significantly more active** in the experimental group compared to control. Using some protein annotation software, you find that **250 of those proteins are involved with the cell-cycle and 50 of the proteins are involved with DNA damage repair**. You want to know if these types of proteins are enriched in your set or just what you would expect from sampling random proteins. Of the 8,000 proteins that are detectable, **3,100 proteins are involved with the cell-cycle and 350 are involved with DNA damage repair in total**. Use the hypergeometric test (**phyper()** with **lower.tail=F**), to see if either protein annotation is significantly enriched in your set.
+* Which protein annotation is significantly enriched?
+* What it is about that protein annotation that made it more significant?
