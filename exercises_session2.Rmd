@@ -1,6 +1,6 @@
 ---
 title: "R Exercises"
-author: "Shweta Ramdas"
+author: "Shweta Ramdas, Matt Paul and Binglan Li"
 date: "April 2, 2019"
 output:
   html_document:
@@ -37,6 +37,7 @@ In any case, once you've saved the file to disk somewhere, use the load button i
 ###Exercise 1.3.3: Saving the current workspace to a file
 Create a few new variables, and then use the save button in the Rstudio workspace tab to save it to disk. Don't overwrite the existing driving.Rdata file: call it something like driving_version2.Rdata or something. I generally find that it's a good idea to leave the original data file in pristine condition.
 
+##Exercises for Session 2
 ##Exercises for 2.1: Descriptive statistics
 
 In this session, we will learn some basic statistical tests and learn to apply them on an example gene expression dataset comparing gene expression between _Parkinson's_ disease patients .
