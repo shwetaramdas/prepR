@@ -24,11 +24,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ###Exercise 1.3.2: Loading an .Rdata file
 
 The data set that we'll use for the exercise is located online at 
-http://ua.edu.au/ccs/docs/lsr/driving.Rdata
+https://github.com/JustinMShea/wooldridge/blob/master/data/happiness.RData
 
 Open a browser, go to that address and save the file to disk. In my case, I saved it to
 
-~/pipelines/workshop/driving.Rdata
+~/pipelines/workshop/happiness.Rdata
 
 where ~ is a standard symbol used in Unix-like operating systems such as Mac OS X that refers to "the current user's home directory", which for my current machine would be /Users/mattpaul. I mention this because you'll sometimes see R refer to the ~ directory, and you might want to know what it means.
 
@@ -44,7 +44,7 @@ In this session, we will learn some basic statistical tests and learn to apply t
 
 ###Preliminaries
 
-* Download the expression data (expressionpd.txt) from www.github.com/shwetaramdas/prepR
+* Download the expression data (expressionpd.txt) from https://github.com/shwetaramdas/prepR/blob/master/expressionpd.txt
 * Load the expressionpd.txt file into a file expn. What do the arguments mean?
 * Type head (expn) to look at the first few observations
 * How many samples does this data contain? How many genes?
@@ -53,6 +53,7 @@ In this session, we will learn some basic statistical tests and learn to apply t
 ```{r error=TRUE}
 expn = read.table(file="expressionpd.txt", header=T, sep="\t", stringsAsFactors=F)
 #what do the arguments mean? header, sep, stringsAsFactors?
+
 dim(expn)
 
 #There are too many genes to be seen. How about viewing only  the first 5 columns and the first 5 rows?
@@ -107,7 +108,7 @@ Note: The filepath in the load function needs to match where you download expres
 * Store the p-value from the first test using **$p.value**
 * Run a paired samples t-test to see if the number of errors made at time 2 differs from the number of errors people made at time 1
 * Run **wilcox.test()** for both unpaired **(paired=F)** and paired **(paired=T)** tests to see if the difference in means is significant. Describe the output for both tests.
-* Make a hypothesis about the difference in age of drivers that are distracted by **toddlers** compared to age of drivers distracted by the **radio**. Test that hypothesis using t.test() and wilcox.test()
+* Going back to the **happiness** dataset, make a hypothesis about the difference in number of babies between people who are from New England and from the Pacific. Test that hypothesis using t.test() and wilcox.test()
 
 ###Exercise 2.2.1: Tests for enrichment
 
