@@ -1,0 +1,262 @@
+---
+title: "Penn_PREP_Workshop_2019"
+author: "Binglan Li, Shweta Ramdas, Matt Paul"
+date: "3/19/2019"
+output:
+  pdf_document:
+    fig_width: 4
+    fig_height: 3
+  html_document:
+    df_print: paged
+Purpose: Examples and excerise of simple linear regression for Penn PREP workshop
+Credits: Original material from https://ytliu0.github.io/Stat390EF-R-Independent-Study-archive/RMarkdownExercises/Galton_solution.html
+---
+
+```{r setup, include=FALSE}
+# This is merely a chunk for the default R markdown setup 
+knitr::opts_chunk$set(echo = TRUE)
+# This is a pacakge to install LaTex so that R markdown can generate PDF output
+#install.packages("tinytex")
+#tinytex::install_tinytex()
+```
+
+
+### Multiple Testing Adjustment
+
+**"Simulated_p_values.txt"** is comprised of randomly generated p-values. None of them suggests any statistical significant test results, despite the fact that some p-values are less than 0.05 out of chance. 
+
+  1. Read simulated p-values to a vector named **p_values** using **read.table("simulated_p_values.txt")**
+  2. Adjust p-values using **p.adjust(vector, method = "fdr")** and store the output to a new vector named **fdr**
+  3. Adjust p-values using **p.adjust(vector, method = "bonferroni")** and store the output to a new vector named **bonferroni_p**
+  4. Use **length(which(vector < 0.05))** to check whether there are still any significant p-values.
+  
+```{r}
+# Type your code here
+
+```
+
+
+
+### Preliminaries
+
+Load the ggplot2 library and necessary datasets. Here we are using the Galton data, referred to as Pearson's height data as well, on the heights of parents and their children collected by sir Francis Galton (1822-1911), an English statistician. He founded many concepts in statistics, such as correlation, quartile, percentile and regression, that are still being used today. The famous Pearson's correlation coefficient was established by Karl Pearson based on a related idea introduced by sir Francis Galton.
+
+The data were collected in the **late 19th century in England**. He coined the term regression towards mediocrity to describe the result of his linear model, which was too philosophical for me to understand. (Note that the paper was written in 1886.)
+
+### Exercise 1.0
+  1. Install **ggplot2** package using **install.packages()**.
+  2. Load **ggplot2** package using **library()**.
+  3. Create a new data frame called **heights** that reads data from **"Galton_Height.txt"** using **read.table()**. Notice that this is a tab delimited file with a header line. Let **read.table()** know you want to keep the header line of the data by adding the argument **header = TRUE** in the read.table() function, e.g. **read.table(file, header = TRUE)**.
+  4. (Optional) while reading the height data by read.table(), add the argument **stringsAsFactors = F**. Use **str()** to check the internal structure of the data frame of **heights** which tells you the dimension and types of data in each vector/column. Do you notice any difference after adding the argument?
+
+
+```{r load libraries and datasets}
+# install ggplot2 package
+# install.packages("ggpplot2")
+# if the above doesn't work, try
+# devtools::install_github("tidyverse/ggplot2")
+
+# load libraries
+library(ggplot2)
+
+# load datasets.
+# An alternative way to load data is through "import dataset" bottom located 
+# at the top right console under the "Environment" tab
+heights <- read.table("Galton_Height.txt", header = TRUE, stringsAsFactors = F)
+
+# load the iris dataset.
+# this is another famous statistical dataset that you can play with
+data("iris")
+```
+
+
+### Exercise 1.1. Data cleaning
+
+  1. Check the height data using **head()**. What data do you think are in **heights**?
+  2. Check dimension of **heights** using either **dim()** or **str()**. 
+  3. Extract "Father" and "Height" columns from heights and keep only rows whose "Gender" are males ("M"). Store the extracted data in a new data frame named **fs** (father-and-son pairs).
+  4. (Optional) Rstudio also provides a cool function that allows you to skim through the whole data frame and even do basic search, filtering, and sorting without making any actual changes to the data. Find the table of data under the tab of **Environment** at the top right. Find **heights**. Click on the small table icon to the right of **heights**. 
+  5. (Optional) use **View()** to open a new tab in the coding console to view data in **fs**.
+
+```{r}
+# Type your code here
+
+```
+
+
+
+### Exercise 1.2. Correlation
+
+Correlation is a powerful approach to learn whether there is the linear relationship between two random variables. However, correlation does not indicate any causal-effect relation between two variables. For example, Even if the number of deaths per year are correlated with iphone sales, the former is not necessarily attributable to the latter. The estimation of correlation simply indicates 1) whether there is a linear relationsihp, 2) the strength of the relationship, and 3) the direction of the relationship.
+
+  1. Calculate the correlation between the father's and son's height using **cor()**.
+
+```{r}
+# Type your code here
+
+```
+
+
+### Exercise 1.3. Generate a Simple Linear Regression (SLR) Model
+
+Regression is an approach for modelling the relationship between a quantitative response Y and a single predictor variable X. Regression can sometimes look a lot like correlation in finding linear relationships and learn strength and direction of the relationship. But regression can be more powerful as it provides a statistical model explaining the relationship between X and Y (exploration) and predict the mean value of an unknown Y given a new X (prediction).
+
+  1. Generate a SLR between the son's height (**Height** in fs, Y) and the father's height (**Father** in fs, X) using **lm()**. 
+  2. Store the SLR model in a variable named **fs_lm**.
+  3. Print the SLR model of father-and-son height. What are intercept and slope?
+  4. What is the unit increase of son's height when there is every one unit increase on father's height?
+  
+```{r}
+# Type your code here
+
+```
+
+
+### Exercise 1.4. Reading Additional Output of SLR from summary()
+
+  1. Obtain the summary statistics of the father-and-son SLR model using **summary()**.
+  2. Is there a relationship between father's and son's height?
+  3. How accurate is the SLR model of father-and-son height? Find the R-square of the SLR model.
+
+```{r}
+# Type your code here
+
+```
+
+
+### Exercise 1.5. Predict Using a SLR Model
+
+  1. Generate a new data frame named **new_f** that store a vector/column named **Father** with a single value - 75.
+  2. Predict the son's height when the father is 75 inches using **predict(regression model, new data)**.
+  3. Calculate the 95% confidence interval of son's height when the father is 75 inches tall using **predict(regression model, new data, interval = "confidence")**. What is the lower and upper bound of the confidence interval of predicted son's height on average?
+  4. Calculate the 95% prediction interval of son's height when the father is 75 inches tall using **predict(regression model, new data, interval = "prediction")**. What is the lower and upper bound of the prediction interval of predicted son's height? 
+  
+```{r}
+# Type your code here
+
+```
+
+
+### Exercise 1.6. **(Optional)** Checking Assumptions 
+
+  1. Draw a scatter plot between father's (X) and son's height (Y) using **fs** and **geom_point()** in ggplot2. Do you observe a linear relationship between father's and son's height?
+  2. Create a new column/vector in **fs** named **residuals** which stores residuals (**fs_lm$residuals**) from the fitted SLR model.
+  3. Draw a residual plot for your SLR model on father-and-son data using **fs** data frame and **geom_point()** in ggplot2. Use father's height in **fs** as X-axis and use residuals in **fs** as Y-axis. Do you observe constant variance of errors?
+  4. Create a data frame named **fs_lagged_residuals** to store two columns of residuals with a lag of one. Let column 1 store all residuals but the last one. Let column 2 store all residuals but the first one.
+  5. Generate a linear regression on lagged residuals using **ggplot2** and **fs_lagged_residuals**. Print summary statistics of the SLR model of lagged residuals using **summary()**. Is there a significant linear relationship between lagged residuals?
+  
+You will find that father-and-son height data do not violate the assumptions of linearity or constant variance of errors, but residual i is correlated to residual i+1, suggesting **violation of independence of errors**. A closer look into the father-and-son height data will show that there are likely more than one sons in a family. As siblings from the same household might share the same factors, besides father's height, that contribute to their height, like diet and environmental exposures. So, the residuals of these siblings might be correlated. The easiest way to resolve the issue might be keep only one father-and-son pair from each family and redo regression analysis. Now you might understand why 80% of the time in a bioinformatic project is used in data cleaning.
+
+  6. Use the following code to extract only one father-and-son pair from each family.
+  
+~~~~~
+  fs <- heights[which(heights$Gender == "M"), c("Family", "Father", "Height")]
+  temp <- fs[!duplicated(fs$Family), c("Father", "Height")]
+  head(temp)
+  fs <- temp
+  rm(temp)
+~~~~~
+
+  7. Redo linear regression analysis on cleaned **fs** data set.
+  
+```{r}
+# Type your code here
+
+```
+
+
+### Exercise 1.7. **(Optional)** Identify outliers
+
+  1. Fit a SLR into the new **fs** data set that has only one father-and-son pair from each family using **lm()**. Store the regression result in a variable named **fs_lm**.
+  2. Draw a residual plot using the new **fs_lm** model.
+  3. Do you see outliers, high leverage points, or influential points?
+
+```{r}
+# Type your code here
+
+```
+
+
+### Exercise 2.1. 
+  
+  1. Draw a scatter plot between father's and children's height using **geom_point()** in ggplot2.
+  2. Draw a histogram of the distribution of father's height using **geom_histogram()** in ggplot2.
+  
+```{r}
+# Type your code here
+
+```
+
+
+### Exercise 2.2.
+
+  1. Add colors to scatter plot to differentiate sons and daughters using **geom_point(mapping = aes(color = Gender))** in ggplot2.
+  2. Following step 1, add a SLR regression line to the scatter plot using **geom_smooth(method = "lm")**.
+  3. Move aes from **geom_point()** and **geom_smooth()** to the **ggplot()**.
+  4. Draw a overall regression line on height data irrespect of gender using **geom_point()** and **geom_smooth()**. In order to do so, you will have to specify data in **geom_point()** and **geom_smooth()**, separately.
+  
+```{r}
+# Type your code here
+
+```
+
+
+### Exercise 2.3.
+
+  1. Draw a dentisy plot of the distributions of sons' and daughters' heights using **geom_density()**.
+  2. Create a new variable named **tg_summary** and read data from **"tooth_growth_summary.txt"** using **read.table(file, header = T, stringsAsFactors = F)**. Use **tg_summary$dose <- factor(tg_summary$dose)** to convert the column of dose from integer to factor. It describes the effect of Vitamin C on tooth growth in Guinea pigs. Three dose levels of Vitamin C (0.5, 1, and 2 mg) with each of two delivery methods [orange juice (OJ) or ascorbic acid (VC)] are used.
+  3. Draw a bar plot of the distributions of tooth growth of guinea pig under different VC doses and delivery methods using **geom_bar(stat="identity", position=position_dodge())** and **geom_errorbar(mapping = aes(ymin, ymax), width=.2, position=position_dodge(.9))**
+
+```{r}
+# Type your code here
+
+```
+
+
+### Exercise 2.4.
+
+  1. Use the shape of the points to represent an individual's gender using **geom_point(mapping = aes(shape = factor(Gender)))**
+  2. Change the size of the points using **geom_point(size = 3)**
+  3. Modify the title and axis labels using **labs(title, x, y)**
+  4. Change the overall theme of the plot using **theme_classic()** or other default theme you like.
+
+```{r}
+# Type your code here
+
+```
+
+
+### Exercise 2.5.
+
+  1. Change the sequence of **geom_points()** and **geom_smooth()**. Do you notice the difference?
+  2. Create a variable **cbPalette** to store the colorblind friendly color palette you like. Use a colorblind friendly color palette in your plot using **scale_colour_manual(values = cbPalette)**.
+```{r}
+  # This is my go-to color palette.
+  # This palette is from http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/. 
+  # More info on colors can be found here: http://jfly.iam.u-tokyo.ac.jp/color/.
+  cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", 
+                  "#0072B2", "#D55E00", "#CC79A7")
+```
+  3. Divide your dataset into two facets according to gender using **facet_grid(. ~ Gender)**.
+  4. Create a variable named **p** that store a scatter plot with father's height as x-axis and children's height as y-axis.
+  5. Add a regression line to **p** using **geom_smooth(method = "lm")**.
+  6. Save a plot using **ggsave()**.
+
+```{r}
+# Type your code here
+
+```
+
+
+## Reference and Helpful Materials
+
+#### Statistical Analysis in R
+* An Introduction to Statistical Learning: With Applications in R
+* Applied linear statistical models
+
+#### Visualization in R
+* R cheat sheet
+* Google ggplot2 reference to to go the following website, https://ggplot2.tidyverse.org/reference/index.html
+* Stack Overflow with keywords, “R” or “ggplot2”
+* R for Data Science available at https://r4ds.had.co.nz/
+* The R Graphics Cookbook by Winston Chang
